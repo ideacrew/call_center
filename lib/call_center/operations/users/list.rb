@@ -1,36 +1,39 @@
 # frozen_string_literal: true
 
-module Operations
-  module Users
+module CallCenter
+  module Operations
+    module Users
 
-    # Provides summary information about the users for the specified Amazon Connect instance
-    class List
-      send(:include, Dry::Monads[:result, :do])
+      # Provides summary information about the users for the specified Amazon Connect instance
+      class List
+        send(:include, Dry::Monads[:result, :do])
 
-      # @param [String] instance_id
-      # @param [String] next_token
-      # @param [Integer] max_results
-      # @return [Aws::Connect::Types::ListUsersResponse] response
-      def call(params)
-        values    = yield validate(params)
-        response  = yield create(values)
+        # @param [String] instance_id (required)
+        # @return [Aws::Connect::Types::ListUsersResponse] response
+        def call(params)
+          values    = yield validate(params)
+          response  = yield list(values)
 
-        Success(response)
+          Success(response)
+        end
+
+        private
+
+        def validate(params)
+          params[:instance_id].to_s.empty? ? Failure("invalid instance_id") : Success(params.to_h)
+        end
+
+        def list(values)
+          response = AwsConnection.list_users(values)
+          users = response.user_summary_list.reduce([]) { |list, user| list << user; list }
+
+          Success(users)
+
+        rescue Aws::Connect::Errors::ServiceError
+          Failure("error accessing user list for #{values}")
+        end
+
       end
-
-      private
-
-      def validate(params)
-        result = CallCenter::Validation::Users::UserListContract.new.call(params)
-        result.success? ? Success(result.to_h) : Failure(result)
-      end
-
-      def create(values)
-        response = Aws::Connect::Client.list_users(values)
-
-        Success(response)
-      end
-
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "bundler/setup"
 require 'pry'
 require "call_center"
@@ -6,9 +8,9 @@ require 'support/call_center_data_seed'
 
 RSpec.configure do |config|
     # Stub all calls to AWS
-  config.before do
-    Aws.config.update(stub_responses: true)
-  end
+  # config.before do
+  #   Aws.config.update(stub_responses: true)
+  # end
 
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"

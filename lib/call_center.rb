@@ -29,9 +29,8 @@ module CallCenter
   region      = 'us-east-1'
   client      = Operations::Clients::Create.new.call(credentials: credentials, region: region)
 
-  AwsConnect  = Aws::Connect::Resource.new(client: client.value!)
-
-  InstanceId  = '027a44e8-e01d-413a-89f8-1b25ea2009cc'
+  AwsConnection = Aws::Connect::Resource.new(client: client.value!).client
+  InstanceId    = '027a44e8-e01d-413a-89f8-1b25ea2009cc'
 
 
   conn_defaults = Aws::InstanceProfileCredentials.new(
