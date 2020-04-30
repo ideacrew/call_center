@@ -12,8 +12,8 @@ RSpec.describe CallCenter::Operations::Users::List do
 
     it "should return existing users" do
       list_users_response = subject.call(instance_id: instance_id)
-
-      expect(list_users_response.value!).to eq []
+      expect(list_users_response.success?).to be_truthy
+      expect(list_users_response.value![0]).to be_a Aws::Connect::Types::UserSummary
     end
   end
 

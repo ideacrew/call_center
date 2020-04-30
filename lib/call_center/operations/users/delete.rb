@@ -7,6 +7,7 @@ module CallCenter
       # Deletes a user account from the specified Amazon Connect instance
       class Delete
         send(:include, Dry::Monads[:result, :do])
+        send(:include, Dry::Monads[:try])
 
         # @param [String] instance_id (required)
         # @param [String] user_id (required)
@@ -26,18 +27,14 @@ module CallCenter
           elsif params[:instance_id].to_s.empty? || params[:user_id].to_s.empty?
             Failure("iinstance_id and user_id values are required")
           else
-            Success(params.to_h)
+            Success(params)
           end
         end
 
         def list(values)
-          response = AwsConnection.delete_user(values)
-          Success(response)
-
-        rescue Aws::Connect::Errors::ServiceError
-          Failure("error deleting user for #{values}")
+          response = Try { AwsConnection.delete_user(values.to_h) }
+          response.to_result
         end
-
       end
     end
   end

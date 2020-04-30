@@ -21,7 +21,7 @@ module CallCenter
 
         def validate(params)
           values = CallCenter::Validation::Users::UserContract.new.call(params)
-          values.to_result
+          values.success? ? Success(values) : Failure(valuess)
         end
 
         def create(values)

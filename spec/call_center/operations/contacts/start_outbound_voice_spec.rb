@@ -26,8 +26,6 @@ RSpec.describe CallCenter::Operations::Contacts::StartOutboundVoice do
 
     it "should initiate a call" do
       id = subject.call(params)
-binding.pry
-
     end
   end
 
