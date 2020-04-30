@@ -3,27 +3,39 @@
 module CallCenter
   module Operations
     module Contacts
-      class GetAttributes
-        class StartOutboundVoice
-          send(:include, Dry::Monads[:result, :do])
 
-          # @param [String] instance_id The identifier of the Amazon Connect instance
-          # @param [String] contact_id The ID of the contact
-          # @return [Seahorse::Client::Response] An empty {Seahorse::Client::Response Response}
-          def call(params)
-            values    = yield validate(params)
-            response  = yield perform(values)
+      # Initiates a contact flow to place an outbound call to a customer
+      #   There is a 60 second dialing timeout for this operation. If the call 
+      #   is not connected after 60 seconds, it fails.
+      class StartOutboundVoice
+        send(:include, Dry::Monads[:result, :do])
+        send(:include, Dry::Monads[:try])
 
-            Success(response)
-          end
+        # @param [String] instance_id (required)
+        # @param [String] contact_flow_id (required)
+        # @param [String] destination_phone_number (required)
+        # @param [String] client_token
+        # @param [String] source_phone_number
+        # @param [String] queue_id
+        # @param [Hash]   attributes
+        # @return [Types::StartOutboundVoiceContactResponse] contact_id 
+        def call(params)
+          values    = yield validate(params)
+          response  = yield start(values)
 
-          private
+          Success(response)
+        end
 
-          def validate(params)
-          end
+        private
 
-          def perform(values)
-          end
+        def validate(params)
+          values = CallCenter::Validation::Contacts::StartOutboundVoiceContract.new.call(params)
+          values.success? ? Success(values) : Failure(values)
+        end
+
+        def start(values)
+          response = Try { AwsConnection.start_outbound_voice_contact(values.to_h) }
+          response.to_result
         end
       end
     end

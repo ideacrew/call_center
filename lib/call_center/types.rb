@@ -7,12 +7,27 @@ module CallCenter
     send(:include, Dry.Types())
     include Dry::Logic
 
+    ContactFlow       = Types::Coercible::String.default("CONTACT_FLOW").enum(
+      "CONTACT_FLOW",
+      "CUSTOMER_QUEUE",
+      "CUSTOMER_HOLD",
+      "CUSTOMER_WHISPER",
+      "AGENT_HOLD",
+      "AGENT_WHISPER",
+      "OUTBOUND_WHISPER",
+      "AGENT_TRANSFER",
+      "QUEUE_TRANSFER"
+    )
 
-    ChannelType       = Types::Coercible::String.default("VOICE").enum("VOICE", "CHAT")
-    PhoneType         = Types::Coercible::String.default("SOFT_PHONE").enum("SOFT_PHONE", "DESK_PHONE")
-    PhoneNumber       = Types::String
+    Queue             = Types::Coercible::String.default("STANDARD").enum("STANDARD", "AGENT")
 
-    Email             = String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
+    Channel           = Types::Coercible::String.default("VOICE").enum("VOICE", "CHAT")
+    Phone             = Types::Coercible::String.default("SOFT_PHONE").enum("SOFT_PHONE", "DESK_PHONE")
+
+    # E.164 Standard
+    PhoneNumber       = Types::String.constrained(format: /^\+\d{1,3}\s\d{1,14}(\s\d{1,13})?/)
+
+    Email             = Types::String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
     EmailOrString     = CallCenter::Types::Email | Types::String
 
     Environment       = Types::Coercible::Symbol.default(:production).enum(:development, :test, :production)

@@ -9,6 +9,7 @@ require_relative 'validation/users/user_summary_contract'
 
 require_relative 'operations/users/create'
 require_relative 'operations/users/list'
+require_relative 'operations/users/delete'
 # require_relative 'operations/users/update_identity_info'
 # require_relative 'operations/users/update_phone_config'
 # require_relative 'operations/users/update_routing_profile'
@@ -37,12 +38,12 @@ module CallCenter
     # Availability state of this User in the application: either enabled or disabled
     # @return [true] If user is enabled
     # @return [false] If user is disabled
-    attribute :security_profile_ids,  Types::Array.of(SecurityProfileId).meta(omittable: false)
+    attribute :security_profile_ids,  Types::Array.of(Types::String).meta(omittable: false)
 
     # @!attribute [r] routing_profile_id (required)
     # The reference or code to be evaluated when user is resolved
     # @return [Any]
-    attribute :routing_profile_id,    RoutingProfileId.meta(omittable: false)
+    attribute :routing_profile_id,    Types::String.meta(omittable: false)
 
     # @!attribute [r] instance_id
     # Options passed through for item execution
@@ -64,7 +65,7 @@ module CallCenter
     # @!attribute [r] hierarchy_group_id (optional)
     # Configuration hierarchy_group_id and values for this User
     # @return [Array<ResourceRegistry::Setting>]
-    attribute :hierarchy_group_id,    CallCenter::HierarchyGroupId.meta(omittable: true)
+    attribute :hierarchy_group_id,    Types::String.meta(omittable: true)
 
 
     # @!attribute [r] hierarchy_group_id (optional)

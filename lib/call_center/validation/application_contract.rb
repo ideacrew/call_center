@@ -16,33 +16,33 @@ module CallCenter
       # config.messages.top_namespace - the key in the locale files under which messages are defined, by default it's dry_validation
       # config.messages.namespace - custom messages namespace for a contract class. Use this to differentiate common messages
 
-
+# TODO Uncomment Rules below and add nested validations 
       # @!macro ruleeach
       #   Validates a nested array of $0 params
       #   @!method rule(settings)
-      rule(:tags).each do
-        if key? && value
-          result = CallCenter::Validation::TagContract.new.call(value)
-          # Use dry-validation metadata error form to pass error hash along with text to calling service
-          key.failure(text: "invalid tags", error: result.errors.to_h) if result && result.failure?
-        end
-      end
+      # rule(:tags).each do
+      #   if key? && value
+      #     result = CallCenter::Validation::TagContract.new.call(value)
+      #     # Use dry-validation metadata error form to pass error hash along with text to calling service
+      #     key.failure(text: "invalid tags", error: result.errors.to_h) if result && result.failure?
+      #   end
+      # end
 
-      rule(:phone_config) do
-        if key? && value
-          result = CallCenter::Validation::PhoneConfigContract.new.call(value)
-          # Use dry-validation metadata error form to pass error hash along with text to calling service
-          key.failure(text: "invalid phone_config", error: result.errors.to_h) if result && result.failure?
-        end
-      end
+      # rule(:phone_config) do
+      #   if key? && value
+      #     result = CallCenter::Validation::PhoneConfigContract.new.call(value)
+      #     # Use dry-validation metadata error form to pass error hash along with text to calling service
+      #     key.failure(text: "invalid phone_config", error: result.errors.to_h) if result && result.failure?
+      #   end
+      # end
 
-      rule(:identity_info) do
-        if key? && value
-          result = CallCenter::Validation::IdentityInfoContract.new.call(value)
-          # Use dry-validation metadata error form to pass error hash along with text to calling service
-          key.failure(text: "invalid identity_info", error: result.errors.to_h) if result && result.failure?
-        end
-      end
+      # rule(:identity_info) do
+      #   if key? && value
+      #     result = CallCenter::Validation::IdentityInfoContract.new.call(value)
+      #     # Use dry-validation metadata error form to pass error hash along with text to calling service
+      #     key.failure(text: "invalid identity_info", error: result.errors.to_h) if result && result.failure?
+      #   end
+      # end
 
 
     end

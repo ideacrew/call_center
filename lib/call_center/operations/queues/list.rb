@@ -1,36 +1,43 @@
 # frozen_string_literal: true
 
-module Operations
-  module Queues
+module CallCenter
+  module Operations
+    module Queues
 
-    # Provides summary information about the users for the specified Amazon Connect instance
-    class List
-      send(:include, Dry::Monads[:result, :do])
+      # Provides summary information about the queues for the specified Amazon Connect instance
+      class List
+        send(:include, Dry::Monads[:result, :do])
+        send(:include, Dry::Monads[:try])
 
-      # @param [String] instance_id
-      # @param [String] next_token
-      # @param [Integer] max_results
-      # @return [Aws::Connect::Types::ListUsersResponse] response
-      def call(params)
-        values    = yield validate(params)
-        response  = yield create(values)
+        # @param [String] instance_id (required)
+        # @return [Aws::Connect::Types::ListUsersResponse] response
+        def call(params)
+          values    = yield validate(params)
+          response  = yield list(values)
+          queues    = yield serialize(response)
 
-        Success(response)
+          Success(queues)
+        end
+
+        private
+
+        def validate(params)
+          values = CallCenter::Validation::Queues::ListContract.new.call(params)
+          values.success? ? Success(values) : Failure(values)
+        end
+
+        def list(values)
+          response = Try { AwsConnection.list_queues(values.to_h) }
+          response.to_result
+        end
+
+        def serialize(response)
+          queues = response.queue_summary_list.reduce([]) { |list, queue| list << queue; list }
+
+          Success(queues)
+        end
+
       end
-
-      private
-
-      def validate(params)
-        result = CallCenter::Validation::Queues::QueueListContract.new.call(params)
-        result.success? ? Success(result.to_h) : Failure(result)
-      end
-
-      def create(values)
-        response = Aws::Connect::Client.list_queues(values)
-
-        Success(response)
-      end
-
     end
   end
 end

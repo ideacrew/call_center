@@ -4,9 +4,11 @@ module CallCenter
   #
   # @example Define the phone_config
   #   IdentityInfo.new()
-  #   IdentityInfo.new()
   class IdentityInfo < Dry::Struct
 
+    attribute :first_name,  Types::String.meta(omittable: true)
+    attribute :last_name,   Types::String.meta(omittable: true)
+    attribute :email,       CallCenter::Types::Email.meta(omittable: true)
 
   end
 end

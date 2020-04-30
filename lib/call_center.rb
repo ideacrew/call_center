@@ -8,30 +8,48 @@ require 'dry/monads'
 require 'dry/monads/do'
 require 'dry-struct'
 
+require 'resource_registry'
+
 require 'call_center/error'
 require 'call_center/types'
 require 'call_center/validation/application_contract'
 
 require 'call_center/client'
 require 'call_center/contact'
-require 'call_center/hierarchy_group_id'
+require 'call_center/hierarchy_group'
 require 'call_center/identity_info'
 require 'call_center/phone_config'
 require 'call_center/queue'
-require 'call_center/routing_profile_id'
-require 'call_center/security_profile_id'
+require 'call_center/routing_profile'
+require 'call_center/security_profile'
 require 'call_center/user'
+require 'call_center/asset'
+
+
+# TODO
+# Enable injection/query for values used in call_center_data_seed
+# Enable mocking in rspec_helper
+# CallCenter::Operations::Contacts::StartOutboundVoice - finish spec and get running
+# CallCenter::Operations::Contacts::StartChat - build spec and get running
+# 
+# Create/complete entities/contracts for API resources (See list in Asset model)
+# Add specs and verify spec coverage for entities/contracts
+
 
 module CallCenter
-
 
   credentials = Aws::SharedCredentials.new.credentials
   region      = 'us-east-1'
   client      = Operations::Clients::Create.new.call(credentials: credentials, region: region)
 
   AwsConnection = Aws::Connect::Resource.new(client: client.value!).client
-  InstanceId    = '027a44e8-e01d-413a-89f8-1b25ea2009cc'
+  LoginURL      = "https://demo-covid.awsapps.com/connect/login"
 
+  InstanceId = ''
+  
+  call_recordings   = "covidmost/connect/demo-covid/CallRecordings"
+  chat_transcripts  = "covidmost/connect/demo-covid/ChatTranscripts"
+  exported_reports  = "covidmost/connect/demo-covid/Reports"
 
   conn_defaults = Aws::InstanceProfileCredentials.new(
     {

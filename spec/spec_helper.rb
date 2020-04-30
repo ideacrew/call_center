@@ -4,8 +4,6 @@ require "bundler/setup"
 require 'pry'
 require "call_center"
 
-require 'support/call_center_data_seed'
-
 RSpec.configure do |config|
     # Stub all calls to AWS
   # config.before do

@@ -7,27 +7,26 @@ module CallCenter
       # Create a new user account for the specified Amazon Connect instance
       class Create
         send(:include, Dry::Monads[:result, :do])
+        send(:include, Dry::Monads[:try])
 
         #
         def call(params)
           values  = yield validate(params)
           user    = yield create(values)
 
-          Success(CallCenter::Client)
+          Success(user)
         end
 
         private
 
         def validate(params)
-          result = CallCenter::Validation::Users::UserContract.new.call(params)
-          result.success? ? Success(result.to_h) : Failure(result)
+          values = CallCenter::Validation::Users::UserContract.new.call(params)
+          values.to_result
         end
 
         def create(values)
-          response = Aws::Connect::Client.create_user(values)
-          Success(response)
-
-        rescue CallCenter::Error::CreateUserError, "error creating user: #{values}"
+          response = Try { AwsConnection.create_user(values.to_h) }
+          response.to_result
         end
       end
 
