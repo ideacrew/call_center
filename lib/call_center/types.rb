@@ -25,7 +25,7 @@ module CallCenter
     Phone             = Types::Coercible::String.default("SOFT_PHONE").enum("SOFT_PHONE", "DESK_PHONE")
 
     # E.164 Standard
-    PhoneNumber       = Types::String.constrained(format: /^\+\d{1,3}\s\d{1,14}(\s\d{1,13})?/)
+    PhoneNumber       = Types::String.constrained(format: /^\+(?:[0-9] ?){6,14}[0-9]$/)
 
     Email             = Types::String.constrained(format: /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i)
     EmailOrString     = CallCenter::Types::Email | Types::String

@@ -18,14 +18,38 @@ RSpec.describe CallCenter::Operations::Contacts::StartOutboundVoice do
       contact_flow_id: contact_flow_id,
       destination_phone_number: destination_phone_number,
       source_phone_number: source_phone_number,
-      # queue_id: queue_id,
+      queue_id: queue_id,
     }
   }
 
   context 'When valid params are passed' do
 
     it "should initiate a call" do
-      id = subject.call(params)
+      response = subject.call(params)
+      expect(response.success?).to be_truthy
+    end
+  end
+
+  context 'When invalid params are passed' do
+    let(:missing_params) {{instance_id: instance_id, source_phone_number: source_phone_number}}
+
+    let(:invalid_params1)  {
+      {
+        instance_id: instance_id,
+        contact_flow_id: contact_flow_id,
+        destination_phone_number: '+177777777',
+        source_phone_number: source_phone_number,
+      }
+    }
+
+    it "should not initiate a call with missing params" do
+      response = subject.call(missing_params)
+      expect(response.success?).to be_falsey
+    end
+
+    it "should not initiate a call with invalid params" do
+      response = subject.call(invalid_params1)
+      expect(response.success?).to be_falsey
     end
   end
 

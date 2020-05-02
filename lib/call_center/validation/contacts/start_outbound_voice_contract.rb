@@ -21,12 +21,10 @@ module CallCenter
         params do
           required(:instance_id).filled(:string)
           required(:contact_flow_id).filled(:string)
-          required(:destination_phone_number).filled(:string)
-          # required(:destination_phone_number).filled(CallCenter::Types::PhoneNumber)
+          required(:destination_phone_number).filled(CallCenter::Types::PhoneNumber)
 
           optional(:client_token).maybe(:string)
-          optional(:source_phone_number).maybe(:string)
-          # optional(:source_phone_number).maybe(CallCenter::Types::PhoneNumber)
+          optional(:source_phone_number).maybe(CallCenter::Types::PhoneNumber)
           optional(:queue_id).maybe(:string)
           optional(:attributes).maybe(:hash)
         end

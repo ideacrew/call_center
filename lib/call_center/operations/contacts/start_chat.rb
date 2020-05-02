@@ -19,6 +19,8 @@ module CallCenter
         private
 
         def validate(params)
+          values = CallCenter::Validation::Contacts::StartChatContract.new.call(params)
+          values.success? ? Success(values) : Failure(values)
         end
 
         def perform(values)
