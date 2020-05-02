@@ -6,9 +6,9 @@ require "call_center"
 
 RSpec.configure do |config|
     # Stub all calls to AWS
-  # config.before do
-  #   Aws.config.update(stub_responses: true)
-  # end
+  config.before do
+    Aws.config.update(stub_responses: true)
+  end
 
   # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = ".rspec_status"
