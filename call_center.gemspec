@@ -28,19 +28,21 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency 'i18n',                     '~> 1.6'
-  spec.add_dependency 'aws-sdk-connect',          '~> 1.0'
-  spec.add_dependency 'dry-validation',           '~> 1.2'
-  spec.add_dependency 'dry-struct',               '~> 1.0'
-  spec.add_dependency 'dry-monads',               '~> 1.2'
-  spec.add_dependency 'dry-matcher',              '~> 0.7'
+  spec.add_dependency 'i18n',                       '~> 1.6'
+  spec.add_dependency 'aws-sdk-connect',            '~> 1.0'
+  spec.add_dependency 'dry-validation',             '~> 1.2'
+  spec.add_dependency 'dry-struct',                 '~> 1.0'
+  spec.add_dependency 'dry-monads',                 '~> 1.2'
+  spec.add_dependency 'dry-matcher',                '~> 0.7'
 
-  spec.add_development_dependency "bundler",          "~> 2.0"
-  spec.add_development_dependency "rubocop",          '~> 0.74.0'
-  spec.add_development_dependency "yard",             "~> 0.9"
+  spec.add_dependency 'rails',                      '>= 6.0'
+
+  spec.add_development_dependency "bundler",        "~> 2.0"
+  spec.add_development_dependency "rubocop",        '~> 0.74.0'
+  spec.add_development_dependency "yard",           "~> 0.9"
   spec.add_development_dependency 'pry-byebug'
 
   # For ResourceRegistry and Rails Compatib ility
-  spec.add_development_dependency 'activesupport',    '~> 5.2.4'
+  spec.add_development_dependency 'activesupport',  '~> 5.2.4'
 
 end
