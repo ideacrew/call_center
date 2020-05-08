@@ -9,6 +9,7 @@ require 'dry/monads/do'
 require 'dry-struct'
 
 require 'resource_registry'
+require 'call_center/service'
 
 require 'call_center/error'
 require 'call_center/types'
@@ -38,14 +39,14 @@ require 'call_center/asset'
 
 module CallCenter
 
-  credentials = Aws::SharedCredentials.new.credentials
-  region      = 'us-east-1'
-  client      = Operations::Clients::Create.new.call(credentials: credentials, region: region)
+  # credentials = Aws::SharedCredentials.new.credentials
+  # region      = 'us-east-1'
+  # client      = Operations::Clients::Create.new.call(credentials: credentials, region: region)
 
-  AwsConnection = Aws::Connect::Resource.new(client: client.value!).client if client.success?
+  # AwsConnection = Aws::Connect::Resource.new(client: client.value!).client if client.success?
   LoginURL      = "https://demo-covid.awsapps.com/connect/login"
 
-  InstanceId = ''
+  InstanceId    = ''
   
   call_recordings   = "covidmost/connect/demo-covid/CallRecordings"
   chat_transcripts  = "covidmost/connect/demo-covid/ChatTranscripts"

@@ -35,7 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-monads',                 '~> 1.2'
   spec.add_dependency 'dry-matcher',                '~> 0.7'
 
-  spec.add_dependency 'rails',                      '>= 6.0'
+  spec.add_dependency 'rails',                      '>= 5.2.4'
 
   spec.add_development_dependency "bundler",        "~> 2.0"
   spec.add_development_dependency "rubocop",        '~> 0.74.0'
