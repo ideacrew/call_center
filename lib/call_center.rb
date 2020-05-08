@@ -42,7 +42,7 @@ module CallCenter
   region      = 'us-east-1'
   client      = Operations::Clients::Create.new.call(credentials: credentials, region: region)
 
-  AwsConnection = Aws::Connect::Resource.new(client: client.value!).client
+  AwsConnection = Aws::Connect::Resource.new(client: client.value!).client if client.success?
   LoginURL      = "https://demo-covid.awsapps.com/connect/login"
 
   InstanceId = ''
