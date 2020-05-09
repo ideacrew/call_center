@@ -12,22 +12,20 @@ module CallCenter
         # @param [String] region
         # @return [Aws::Connect::Client] response 
         def call(registry)
-          client = create_client(registry)
-          attributes = get_feature_attrs(registry)
-          feature = yield create_feature(attributes)
+          connection = yield create_client(registry)
+          attributes = yield get_feature_attrs(registry)
+          feature    = yield create_feature(attributes)
+
           Success(feature)
         end
 
         private
 
-
         def create_client(registry)
           credentials = Aws::SharedCredentials.new.credentials #do we need to fetch from resource registry?
           region      = registry[:aws].setting(:aws_region).item
-          client      = CallCenter::Operations::Clients::Create.new.call(credentials: credentials, region: region)
-          Object.set_const(CallCenter::AwsConnection) = Aws::Connect::Resource.new(client: client.value!).client if client.success?
 
-          Success(client)
+          CallCenter::Operations::Clients::Create.new.call(credentials: credentials, region: region)
         end
 
         def get_feature_attrs(registry)
@@ -53,9 +51,7 @@ module CallCenter
         end
 
         def create_feature(attributes)
-          feature = ResourceRegistry::Operations::Features::Create.new.call(attributes)
-
-          Success(feature)
+          ResourceRegistry::Operations::Features::Create.new.call(attributes)
         end
       end
     end

@@ -9,12 +9,12 @@ require 'dry/monads/do'
 require 'dry-struct'
 
 require 'resource_registry'
-require 'call_center/service'
 
 require 'call_center/error'
 require 'call_center/types'
 require 'call_center/validation/application_contract'
 
+require 'call_center/service'
 require 'call_center/client'
 require 'call_center/contact'
 require 'call_center/hierarchy_group'
@@ -44,6 +44,7 @@ module CallCenter
   # client      = Operations::Clients::Create.new.call(credentials: credentials, region: region)
 
   # AwsConnection = Aws::Connect::Resource.new(client: client.value!).client if client.success?
+
   LoginURL      = "https://demo-covid.awsapps.com/connect/login"
 
   InstanceId    = ''

@@ -6,38 +6,59 @@ module CallCenter
 
       # Establish a connection instance to Amazon Connect
       class Create
-        send(:include, Dry::Monads[:result, :do])
+        send(:include, Dry::Monads[:list, :result, :validated, :do, :try])
 
         # @param [Aws::Credentials] credentials
         # @param [String] region
         # @return [Aws::Connect::Client] response
         def call(params)
-          values  = yield validate_credentials(params)
-          values  = yield validate_region(params)
+          region, credentials = yield List::Validated[
+            validate_region(params[:region]),
+            validate_credentials(params[:credentials]),
+          ].traverse.to_result
 
-          client  = yield create(values)
-          Success(client)
+
+          client     = yield create(region, credentials)
+          connection = yield connect(client)
+
+          Success(connection)
         end
 
         private
 
-        def validate_region(params)
-          params[:region].to_s.empty? ? Failure("region attribute required") : Success(params.to_h)
-        end
 
-        def validate_credentials(params)
-          if params[:credentials].is_a?(Aws::Credentials) && params[:credentials].set?
-            Success(params.to_h)
+        def validate_region(region)
+          if region.present?
+            Valid(region)
           else
-            Failure("error validating credentials")
+            Invalid("region missing")
           end
         end
 
-        def create(values)
-          client  = Aws::Connect::Client.new(credentials: values[:credentials], region: values[:region])
+        def validate_credentials(credentials)
+          if credentials.is_a?(Aws::Credentials) && credentials.set?
+            Valid(credentials)
+          else
+            Invalid("invalid credentials #{credentials}")
+          end
+        end
+
+        def create(region, credentials)
+          client  = Aws::Connect::Client.new(credentials: credentials, region: region)
+          
           Success(client)
         end
-        
+
+        def connect(client)
+          Try(Aws::Connect::Errors::InvalidRequestException) { Aws::Connect::Resource.new(client: client).client }.to_result.bind do |result|
+            if result
+              CallCenter.const_set("AwsConnection", result)
+              Success(result)
+            else
+              Failure("AWS connection failed!!")
+            end
+          end
+        end
       end
     end
   end
