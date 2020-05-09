@@ -32,6 +32,7 @@ module CallCenter
          attributes =  {
             key: :call_center,
               is_enabled: true,
+              namespace: [:system, :services],
               settings:
               [
                 {key: :login_url,
